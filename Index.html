@@ -26,31 +26,7 @@
             </div>
         </div>
         <ul class="laps">
-            <li class="lap-item">
-                <span class="number">#1</span>
-                <span class="time-stamp"> 01 : 43 : 07</span>
-            </li>
-            <li class="lap-item">
-                <span class="number">#1</span>
-                <span class="time-stamp"> 01 : 43 : 07</span>
-            </li>
-            <li class="lap-item">
-                <span class="number">#1</span>
-                <span class="time-stamp"> 01 : 43 : 07</span>
-            </li>
-               <li class="lap-item">
-                <span class="number">#1</span>
-                <span class="time-stamp"> 01 : 43 : 07</span>
-            </li>
-            <li class="lap-item">
-                <span class="number">#1</span>
-                <span class="time-stamp"> 01 : 43 : 07</span>
-            </li>
-            <li class="lap-item">
-                <span class="number">#1</span>
-                <span class="time-stamp"> 01 : 43 : 07</span>
-            </li>
-            <button class="lap-clear-button">Clear All</button>
+            <button class="lap-clear-button hidden">Clear All</button>
         </ul>
     </div>
 
@@ -59,9 +35,12 @@
     const startButton = document.getElementsByClassName("start")[0];
     const lapButton = document.getElementsByClassName("lap")[0];
     const resetButton = document.getElementsByClassName("reset")[0];
+    const clearButton = document.getElementsByClassName("lap-clear-button")[0];
     const minute = document.getElementsByClassName("minute")[0];
     const second = document.getElementsByClassName("sec")[0];
     const centiSecond = document.getElementsByClassName("msec")[0];
+    const laps = document.getElementsByClassName("laps")[0];
+    const bg = document.getElementsByClassName("outer-circle")[0];
 
     let isStart = false;
     let secCounter = 0;
@@ -70,6 +49,7 @@
     let centiSec;
     let centiCounter = 0;
     let minCounter = 0;
+    let lapItem = 0;
     let isReset = false;
 
     const toggleButton = () => {
@@ -80,6 +60,7 @@
     const start = () => {
         if(!isStart && !isReset) {
             startButton.innerHTML = "Pause";
+            bg.classList.add("animation-bg");
             min = setInterval(() => {
                     minute.innerHTML = `${++minCounter} :`;
                 }, 60*1000);
@@ -104,12 +85,9 @@
             clearInterval(centiSec);
             isStart = false;
             isReset = false;
+            bg.classList.remove("animation-bg");
         }
         toggleButton();
-    }
-
-    const startSec = () => {
-        
     }
 
     const reset = () => {
@@ -122,7 +100,35 @@
         minute.innerHTML = '0 :';
     }
 
+    const lap = () => {
+        const li = document.createElement("li");
+        const number = document.createElement("span");
+        const timeStamp = document.createElement("span");
+
+        li.setAttribute("class", "lap-item");
+        number.setAttribute("class", "number");
+        timeStamp.setAttribute("class", "time-stamp");
+
+        number.innerText = `#${++lapItem}`;
+        timeStamp.innerHTML = `${minCounter} : ${secCounter} : ${centiCounter}`;
+
+        li.append(number, timeStamp);
+        laps.append(li);
+
+        clearButton.classList.remove("hidden");
+    }
+
+    const clearAll = () => {
+        laps.innerHTML = '';
+        laps.append(clearButton);
+        clearButton.classList.add("hidden");
+        lapItem = 0;
+    }
+
     startButton.addEventListener("click", start);
     resetButton.addEventListener("click", reset);
+    lapButton.addEventListener("click", lap);
+    clearButton.addEventListener("click", clearAll);
+
     </script>
 </body>
